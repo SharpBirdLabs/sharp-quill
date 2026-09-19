@@ -11,7 +11,7 @@ export type AppearanceSettings = {
 }
 
 export const defaultSettings: AppearanceSettings = {
-  width: 'normal',
+  width: 'wide',
   font: 'serif',
   fontSize: 18,
   lineHeight: 1.8,
@@ -39,7 +39,7 @@ export function saveSettings(settings: AppearanceSettings) {
 
 export function applySettings(settings: AppearanceSettings) {
   const root = document.documentElement
-  const widths = { narrow: '36rem', normal: '48rem', wide: '64rem' }
+  const widths = { narrow: '56rem', normal: '72rem', wide: '90rem' }
   const fonts = {
     serif: 'var(--font-serif)',
     sans: 'var(--font-sans)',

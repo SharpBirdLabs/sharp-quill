@@ -1,10 +1,19 @@
 import type { Editor } from '@tiptap/react'
 import { useEditorState } from '@tiptap/react'
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Baseline,
   Bold,
   CheckSquare,
   Code,
+  Eraser,
+  Highlighter,
   ImagePlus,
+  IndentDecrease,
+  IndentIncrease,
   Italic,
   Link,
   List,
@@ -14,11 +23,14 @@ import {
   Redo2,
   SquareCode,
   Strikethrough,
+  Subscript,
+  Superscript,
   Table,
   Table2,
   Underline,
   Undo2,
 } from 'lucide-react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { shortcut } from '../lib/keys'
 import { ToolbarButton, ToolbarDivider } from './ToolbarButton'
 
@@ -27,6 +39,23 @@ type ToolbarProps = {
   onLink: () => void
   onImage: () => void
 }
+
+const TEXT_COLORS = [
+  { label: 'Default', value: '' },
+  { label: 'Red', value: '#dc2626' },
+  { label: 'Orange', value: '#ea580c' },
+  { label: 'Green', value: '#16a34a' },
+  { label: 'Blue', value: '#2563eb' },
+  { label: 'Purple', value: '#7c3aed' },
+]
+
+const HIGHLIGHTS = [
+  { label: 'None', value: '' },
+  { label: 'Yellow', value: '#fde68a' },
+  { label: 'Green', value: '#bbf7d0' },
+  { label: 'Blue', value: '#bfdbfe' },
+  { label: 'Pink', value: '#fbcfe8' },
+]
 
 export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
   const state = useEditorState({
@@ -47,6 +76,14 @@ export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
       code: current.isActive('code'),
       codeBlock: current.isActive('codeBlock'),
       quote: current.isActive('blockquote'),
+      alignLeft: current.isActive({ textAlign: 'left' }) || (!current.isActive({ textAlign: 'center' }) && !current.isActive({ textAlign: 'right' }) && !current.isActive({ textAlign: 'justify' })),
+      alignCenter: current.isActive({ textAlign: 'center' }),
+      alignRight: current.isActive({ textAlign: 'right' }),
+      alignJustify: current.isActive({ textAlign: 'justify' }),
+      highlight: current.isActive('highlight'),
+      subscript: current.isActive('subscript'),
+      superscript: current.isActive('superscript'),
+      color: String(current.getAttributes('textStyle').color ?? ''),
       canUndo: current.can().undo(),
       canRedo: current.can().redo(),
     }),
@@ -120,6 +157,75 @@ export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
       >
         <Strikethrough size={16} strokeWidth={2.2} />
       </ToolbarButton>
+      <SwatchMenu
+        label="Text color"
+        icon={<Baseline size={16} strokeWidth={2.2} />}
+        colors={TEXT_COLORS}
+        current={state.color}
+        onPick={(value) => {
+          if (!value) editor.chain().focus().unsetColor().run()
+          else editor.chain().focus().setColor(value).run()
+        }}
+      />
+      <SwatchMenu
+        label="Highlight"
+        icon={<Highlighter size={16} strokeWidth={2.2} />}
+        colors={HIGHLIGHTS}
+        current={state.highlight ? String(editor.getAttributes('highlight').color ?? '#fde68a') : ''}
+        onPick={(value) => {
+          if (!value) editor.chain().focus().unsetHighlight().run()
+          else editor.chain().focus().toggleHighlight({ color: value }).run()
+        }}
+      />
+      <ToolbarButton
+        label="Superscript"
+        active={state.superscript}
+        onClick={() => editor.chain().focus().toggleSuperscript().run()}
+      >
+        <Superscript size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label="Subscript"
+        active={state.subscript}
+        onClick={() => editor.chain().focus().toggleSubscript().run()}
+      >
+        <Subscript size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+
+      <ToolbarDivider />
+
+      <ToolbarButton
+        label="Align left"
+        shortcut={shortcut('Mod+Shift+L')}
+        active={state.alignLeft}
+        onClick={() => editor.chain().focus().setTextAlign('left').run()}
+      >
+        <AlignLeft size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label="Align center"
+        shortcut={shortcut('Mod+Shift+E')}
+        active={state.alignCenter}
+        onClick={() => editor.chain().focus().setTextAlign('center').run()}
+      >
+        <AlignCenter size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label="Align right"
+        shortcut={shortcut('Mod+Shift+R')}
+        active={state.alignRight}
+        onClick={() => editor.chain().focus().setTextAlign('right').run()}
+      >
+        <AlignRight size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label="Justify"
+        shortcut={shortcut('Mod+Shift+J')}
+        active={state.alignJustify}
+        onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+      >
+        <AlignJustify size={16} strokeWidth={2.2} />
+      </ToolbarButton>
 
       <ToolbarDivider />
 
@@ -146,6 +252,26 @@ export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
         onClick={() => editor.chain().focus().toggleTaskList().run()}
       >
         <CheckSquare size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label="Indent"
+        onClick={() => {
+          if (!editor.chain().focus().sinkListItem('listItem').run()) {
+            editor.chain().focus().sinkListItem('taskItem').run()
+          }
+        }}
+      >
+        <IndentIncrease size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label="Outdent"
+        onClick={() => {
+          if (!editor.chain().focus().liftListItem('listItem').run()) {
+            editor.chain().focus().liftListItem('taskItem').run()
+          }
+        }}
+      >
+        <IndentDecrease size={16} strokeWidth={2.2} />
       </ToolbarButton>
       <ToolbarButton
         label={state.table ? 'Delete table' : 'Insert table'}
@@ -216,6 +342,12 @@ export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
       <ToolbarButton label="Insert image" onClick={onImage}>
         <ImagePlus size={16} strokeWidth={2.2} />
       </ToolbarButton>
+      <ToolbarButton
+        label="Clear formatting"
+        onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+      >
+        <Eraser size={16} strokeWidth={2.2} />
+      </ToolbarButton>
 
       <ToolbarDivider />
 
@@ -235,6 +367,59 @@ export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
       >
         <Redo2 size={16} strokeWidth={2.2} />
       </ToolbarButton>
+    </div>
+  )
+}
+
+function SwatchMenu({
+  label,
+  icon,
+  colors,
+  current,
+  onPick,
+}: {
+  label: string
+  icon: ReactNode
+  colors: { label: string; value: string }[]
+  current: string
+  onPick: (value: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onClick = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false)
+    }
+    window.addEventListener('mousedown', onClick)
+    return () => window.removeEventListener('mousedown', onClick)
+  }, [open])
+
+  return (
+    <div ref={rootRef} className="relative">
+      <ToolbarButton label={label} active={Boolean(current)} onClick={() => setOpen((value) => !value)}>
+        {icon}
+      </ToolbarButton>
+      {open && (
+        <div className="absolute top-[calc(100%+8px)] left-0 z-40 flex gap-1 rounded-xl bg-paper p-2 ring-1 ring-line paper-shadow">
+          {colors.map((color) => (
+            <button
+              key={color.label}
+              type="button"
+              title={color.label}
+              aria-label={color.label}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                onPick(color.value)
+                setOpen(false)
+              }}
+              className="h-6 w-6 rounded-full ring-1 ring-line"
+              style={{ background: color.value || 'var(--ink)' }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

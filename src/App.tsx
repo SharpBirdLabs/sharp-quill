@@ -1,9 +1,15 @@
 import { EditorContent, useEditor } from '@tiptap/react'
+import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
+import Subscript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
 import { TableKit } from '@tiptap/extension-table'
 import { TaskItem } from '@tiptap/extension-task-item'
 import { TaskList } from '@tiptap/extension-task-list'
+import TextAlign from '@tiptap/extension-text-align'
+import { TextStyleKit } from '@tiptap/extension-text-style'
+import Typography from '@tiptap/extension-typography'
 import { Minimize2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { CommandPalette, type CommandItem } from './components/CommandPalette'
@@ -138,6 +144,18 @@ export default function App() {
         }),
         TaskList,
         TaskItem.configure({ nested: true }),
+        TextAlign.configure({
+          types: ['heading', 'paragraph', 'image'],
+        }),
+        TextStyleKit.configure({
+          fontFamily: false,
+          fontSize: false,
+          lineHeight: false,
+        }),
+        Highlight.configure({ multicolor: true }),
+        Subscript,
+        Superscript,
+        Typography,
         StoredImage,
         SearchHighlight,
         NotepadKeymap.configure({
@@ -514,7 +532,7 @@ export default function App() {
         )}
 
         <div className="min-w-0 flex-1">
-          <div className={`mx-auto px-4 py-6 sm:py-10 ${focusMode ? 'max-w-none pt-16' : ''}`}>
+          <div className={`mx-auto w-full max-w-[var(--editor-max)] px-4 py-6 sm:px-6 sm:py-10 ${focusMode ? 'max-w-none pt-16' : ''}`}>
             {!focusMode && (
               <Header
                 title={title}
@@ -539,7 +557,7 @@ export default function App() {
               />
             )}
 
-            <div className="relative rounded-2xl bg-paper ring-1 ring-line paper-shadow">
+            <div className="relative w-full rounded-2xl bg-paper ring-1 ring-line paper-shadow">
               {!focusMode && mode === 'visual' && (
                 <Toolbar editor={editor} onLink={openLinkDialog} onImage={() => void pickAndInsertImage()} />
               )}

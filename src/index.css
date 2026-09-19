@@ -25,7 +25,7 @@
   --accent: #1d4ed8;
   --toolbar: #f7f2e8;
   --soft: #dbeafe;
-  --editor-max: 48rem;
+  --editor-max: 90rem;
   --editor-font: var(--font-serif);
   --editor-size: 18px;
   --editor-leading: 1.8;
@@ -79,12 +79,13 @@ body {
 /* TipTap editor typography — readable, Word-like, not raw Markdown. */
 .tiptap {
   outline: none;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 58vh;
+  overflow-wrap: anywhere;
   font-family: var(--editor-font);
   font-size: var(--editor-size);
   line-height: var(--editor-leading);
-  max-width: var(--editor-max);
-  margin-inline: auto;
   color: var(--ink);
 }
 
@@ -214,10 +215,9 @@ body {
 }
 
 .markdown-source {
+  box-sizing: border-box;
   min-height: 58vh;
   width: 100%;
-  max-width: var(--editor-max);
-  margin-inline: auto;
   resize: none;
   border: 0;
   outline: none;
@@ -236,9 +236,62 @@ body {
 .tiptap img,
 .tiptap .quill-image {
   max-width: 100%;
-  height: auto;
   border-radius: 10px;
   display: block;
+}
+
+.tiptap img:not([width]):not([style*='width']) {
+  height: auto;
+}
+
+.tiptap [data-resize-container] {
+  width: 100%;
+  max-width: 100%;
+}
+
+.tiptap [data-resize-wrapper] {
+  max-width: 100%;
+  line-height: 0;
+}
+
+.tiptap [data-resize-wrapper] img {
+  max-width: 100%;
+}
+
+.tiptap [data-resize-handle] {
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  border-radius: 2px;
+  z-index: 3;
+  opacity: 0;
+}
+
+.tiptap [data-resize-container]:hover [data-resize-handle],
+.tiptap [data-resize-container].ProseMirror-selectednode [data-resize-handle] {
+  opacity: 1;
+}
+
+.tiptap [data-resize-handle='top-left'] {
+  cursor: nwse-resize;
+  transform: translate(-50%, -50%);
+}
+
+.tiptap [data-resize-handle='top-right'] {
+  cursor: nesw-resize;
+  transform: translate(50%, -50%);
+}
+
+.tiptap [data-resize-handle='bottom-left'] {
+  cursor: nesw-resize;
+  transform: translate(-50%, 50%);
+}
+
+.tiptap [data-resize-handle='bottom-right'] {
+  cursor: nwse-resize;
+  transform: translate(50%, 50%);
 }
 
 .tiptap .tableWrapper {
@@ -318,4 +371,28 @@ body {
 .search-match-active {
   background: color-mix(in oklab, #f59e0b 78%, transparent);
   border-radius: 2px;
+}
+
+.tiptap mark {
+  border-radius: 3px;
+  padding: 0.05em 0.12em;
+  background: #fde68a;
+  color: inherit;
+}
+
+.tiptap sub,
+.tiptap sup {
+  font-size: 0.75em;
+}
+
+.tiptap [style*='text-align: center'] {
+  text-align: center;
+}
+
+.tiptap [style*='text-align: right'] {
+  text-align: right;
+}
+
+.tiptap [style*='text-align: justify'] {
+  text-align: justify;
 }

@@ -21,6 +21,72 @@ turndown.addRule('strikethrough', {
   replacement: (content) => `~~${content}~~`,
 })
 
+function styleAlign(el: HTMLElement) {
+  const fromStyle = el.style?.textAlign
+  if (fromStyle) return fromStyle
+  return /text-align:\s*([a-z]+)/i.exec(el.getAttribute('style') ?? '')?.[1] ?? ''
+}
+
+turndown.addRule('alignedBlock', {
+  filter: (node) => {
+    const el = node as HTMLElement
+    if (!el.nodeName) return false
+    const align = styleAlign(el)
+    if (!align || align === 'left' || align === 'start') return false
+    return ['P', 'H1', 'H2', 'H3', 'BLOCKQUOTE'].includes(el.nodeName)
+  },
+  replacement: (content, node) => {
+    const el = node as HTMLElement
+    const tag = el.nodeName.toLowerCase()
+    const align = styleAlign(el)
+    const inner = content.trim()
+    return `\n\n<${tag} style="text-align: ${align}">${inner}</${tag}>\n\n`
+  },
+})
+
+turndown.addRule('imageWithLayout', {
+  filter: 'img',
+  replacement: (_content, node) => {
+    const el = node as HTMLImageElement
+    const src = el.getAttribute('src') ?? ''
+    const alt = el.getAttribute('alt') ?? ''
+    const title = el.getAttribute('title') ?? ''
+    const width = el.getAttribute('width') || parseInt(el.style.width, 10) || ''
+    const height = el.getAttribute('height') || parseInt(el.style.height, 10) || ''
+    const align = styleAlign(el)
+    const keepHtml = Boolean(width || height || (align && align !== 'left' && align !== 'start'))
+    if (!keepHtml) {
+      return title ? `![${alt}](${src} "${title}")` : `![${alt}](${src})`
+    }
+    const attrs = [
+      `src="${src.replaceAll('"', '&quot;')}"`,
+      alt ? `alt="${alt.replaceAll('"', '&quot;')}"` : '',
+      title ? `title="${title.replaceAll('"', '&quot;')}"` : '',
+      width ? `width="${width}"` : '',
+      height ? `height="${height}"` : '',
+      align && align !== 'left' && align !== 'start' ? `style="text-align: ${align}"` : '',
+    ]
+      .filter(Boolean)
+      .join(' ')
+    return `\n\n<img ${attrs} />\n\n`
+  },
+})
+
+turndown.addRule('highlight', {
+  filter: ['mark'],
+  replacement: (content) => `<mark>${content}</mark>`,
+})
+
+turndown.addRule('subscript', {
+  filter: ['sub'],
+  replacement: (content) => `<sub>${content}</sub>`,
+})
+
+turndown.addRule('superscript', {
+  filter: ['sup'],
+  replacement: (content) => `<sup>${content}</sup>`,
+})
+
 turndown.addRule('taskItem', {
   filter: (node) => {
     if (node.nodeName !== 'LI') return false
@@ -160,11 +226,15 @@ export function wrapHtmlDocument(title: string, body: string) {
     pre code { background: none; padding: 0; color: inherit; }
     blockquote { border-left: 3px solid #d6d3d1; margin: 0; padding: 0.2rem 0 0.2rem 1rem; color: #57534e; }
     a { color: #1d4ed8; }
-    img { max-width: 100%; height: auto; }
+    img { max-width: 100%; }
+    img[style*="text-align: center"] { display: block; margin: 0 auto; }
+    img[style*="text-align: right"] { display: block; margin-left: auto; }
     table { border-collapse: collapse; width: 100%; }
     th, td { border: 1px solid #d6d3d1; padding: 0.4rem 0.6rem; text-align: left; }
     th { background: #f5f5f4; }
     input[type=checkbox] { margin-right: 0.4rem; }
+    mark { background: #fde68a; padding: 0.05em 0.12em; }
+    sub, sup { font-size: 0.75em; }
   </style>
 </head>
 <body>

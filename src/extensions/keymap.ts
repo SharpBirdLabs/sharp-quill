@@ -43,6 +43,10 @@ export const NotepadKeymap = Extension.create<NotepadKeymapOptions>({
       'Mod-Shift-8': () => this.editor.commands.toggleBulletList(),
       'Mod-Shift-9': () => this.editor.commands.toggleTaskList(),
       'Mod-Shift-h': () => this.editor.commands.setHorizontalRule(),
+      'Mod-Shift-l': () => this.editor.commands.setTextAlign('left'),
+      'Mod-Shift-e': () => this.editor.commands.setTextAlign('center'),
+      'Mod-Shift-r': () => this.editor.commands.setTextAlign('right'),
+      'Mod-Shift-j': () => this.editor.commands.setTextAlign('justify'),
     }
   },
 })
