@@ -1,0 +1,221 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-desk: var(--desk);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-toolbar: var(--toolbar);
+  --color-soft: var(--soft);
+}
+
+:root {
+  --desk: #e9e2d4;
+  --paper: #fffdf8;
+  --ink: #1c1917;
+  --muted: #78716c;
+  --line: #e8e0d2;
+  --accent: #1d4ed8;
+  --toolbar: #f7f2e8;
+  --soft: #dbeafe;
+  color-scheme: light;
+}
+
+.dark {
+  --desk: #0c0d11;
+  --paper: #16181e;
+  --ink: #ece9e3;
+  --muted: #a8a29e;
+  --line: #2a2d36;
+  --accent: #7dd3fc;
+  --toolbar: #1c1f28;
+  --soft: #164e63;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--desk);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+.paper-shadow {
+  box-shadow:
+    0 1px 1px rgb(28 25 23 / 0.04),
+    0 10px 24px rgb(28 25 23 / 0.07),
+    0 28px 56px rgb(28 25 23 / 0.06);
+}
+
+.dark .paper-shadow {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.04) inset,
+    0 12px 40px rgb(0 0 0 / 0.45);
+}
+
+/* TipTap editor typography — readable, Word-like, not raw Markdown. */
+.tiptap {
+  outline: none;
+  min-height: 58vh;
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+.tiptap > * + * {
+  margin-top: 0.75em;
+}
+
+.tiptap :first-child {
+  margin-top: 0;
+}
+
+.tiptap p.is-editor-empty:first-child::before,
+.tiptap p.is-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.tiptap h1 {
+  font-size: 2.05rem;
+  margin-top: 1.4em;
+}
+
+.tiptap h2 {
+  font-size: 1.55rem;
+  margin-top: 1.25em;
+}
+
+.tiptap h3 {
+  font-size: 1.25rem;
+  margin-top: 1.1em;
+}
+
+.tiptap a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding-left: 1.4em;
+}
+
+.tiptap ul {
+  list-style: disc;
+}
+
+.tiptap ol {
+  list-style: decimal;
+}
+
+.tiptap li p {
+  margin: 0;
+}
+
+.tiptap blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.6em 0;
+}
+
+.tiptap code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+  padding: 0.12em 0.38em;
+  border-radius: 4px;
+}
+
+.dark .tiptap code {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.tiptap pre {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  background: #1c1917;
+  color: #f5f5f4;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.dark .tiptap pre {
+  background: #0b0c10;
+  border: 1px solid var(--line);
+}
+
+.tiptap pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.tiptap u {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.tiptap s {
+  color: color-mix(in oklab, var(--ink) 72%, transparent);
+}
+
+.tiptap ::selection {
+  background: color-mix(in oklab, var(--accent) 26%, transparent);
+}
+
+.markdown-source {
+  min-height: 58vh;
+  width: 100%;
+  resize: none;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
