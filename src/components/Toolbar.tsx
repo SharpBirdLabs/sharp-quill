@@ -2,7 +2,9 @@ import type { Editor } from '@tiptap/react'
 import { useEditorState } from '@tiptap/react'
 import {
   Bold,
+  CheckSquare,
   Code,
+  ImagePlus,
   Italic,
   Link,
   List,
@@ -12,6 +14,8 @@ import {
   Redo2,
   SquareCode,
   Strikethrough,
+  Table,
+  Table2,
   Underline,
   Undo2,
 } from 'lucide-react'
@@ -21,9 +25,10 @@ import { ToolbarButton, ToolbarDivider } from './ToolbarButton'
 type ToolbarProps = {
   editor: Editor
   onLink: () => void
+  onImage: () => void
 }
 
-export function Toolbar({ editor, onLink }: ToolbarProps) {
+export function Toolbar({ editor, onLink, onImage }: ToolbarProps) {
   const state = useEditorState({
     editor,
     selector: ({ editor: current }) => ({
@@ -36,6 +41,8 @@ export function Toolbar({ editor, onLink }: ToolbarProps) {
       strike: current.isActive('strike'),
       ordered: current.isActive('orderedList'),
       bullet: current.isActive('bulletList'),
+      task: current.isActive('taskList'),
+      table: current.isActive('table'),
       link: current.isActive('link'),
       code: current.isActive('code'),
       codeBlock: current.isActive('codeBlock'),
@@ -132,12 +139,44 @@ export function Toolbar({ editor, onLink }: ToolbarProps) {
       >
         <List size={16} strokeWidth={2.2} />
       </ToolbarButton>
+      <ToolbarButton
+        label="Task list"
+        shortcut={shortcut('Mod+Shift+9')}
+        active={state.task}
+        onClick={() => editor.chain().focus().toggleTaskList().run()}
+      >
+        <CheckSquare size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton
+        label={state.table ? 'Delete table' : 'Insert table'}
+        active={state.table}
+        onClick={() => {
+          if (state.table) editor.chain().focus().deleteTable().run()
+          else editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+        }}
+      >
+        <Table size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      {state.table && (
+        <>
+          <ToolbarButton label="Add row" onClick={() => editor.chain().focus().addRowAfter().run()}>
+            <Table2 size={16} strokeWidth={2.2} />
+          </ToolbarButton>
+          <ToolbarButton
+            label="Add column"
+            wide
+            onClick={() => editor.chain().focus().addColumnAfter().run()}
+          >
+            +Col
+          </ToolbarButton>
+        </>
+      )}
 
       <ToolbarDivider />
 
       <ToolbarButton
         label="Link"
-        shortcut={shortcut('Mod+K')}
+        shortcut={shortcut('Mod+Shift+K')}
         active={state.link}
         onClick={onLink}
       >
@@ -173,6 +212,9 @@ export function Toolbar({ editor, onLink }: ToolbarProps) {
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
       >
         <Minus size={16} strokeWidth={2.2} />
+      </ToolbarButton>
+      <ToolbarButton label="Insert image" onClick={onImage}>
+        <ImagePlus size={16} strokeWidth={2.2} />
       </ToolbarButton>
 
       <ToolbarDivider />

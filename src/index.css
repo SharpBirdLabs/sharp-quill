@@ -25,6 +25,10 @@
   --accent: #1d4ed8;
   --toolbar: #f7f2e8;
   --soft: #dbeafe;
+  --editor-max: 48rem;
+  --editor-font: var(--font-serif);
+  --editor-size: 18px;
+  --editor-leading: 1.8;
   color-scheme: light;
 }
 
@@ -76,9 +80,11 @@ body {
 .tiptap {
   outline: none;
   min-height: 58vh;
-  font-family: var(--font-serif);
-  font-size: 1.125rem;
-  line-height: 1.8;
+  font-family: var(--editor-font);
+  font-size: var(--editor-size);
+  line-height: var(--editor-leading);
+  max-width: var(--editor-max);
+  margin-inline: auto;
   color: var(--ink);
 }
 
@@ -210,6 +216,8 @@ body {
 .markdown-source {
   min-height: 58vh;
   width: 100%;
+  max-width: var(--editor-max);
+  margin-inline: auto;
   resize: none;
   border: 0;
   outline: none;
@@ -218,4 +226,96 @@ body {
   font-family: var(--font-mono);
   font-size: 0.95rem;
   line-height: 1.7;
+}
+
+.focus-mode .tiptap,
+.focus-mode .markdown-source {
+  min-height: calc(100svh - 7rem);
+}
+
+.tiptap img,
+.tiptap .quill-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+}
+
+.tiptap .tableWrapper {
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.tiptap table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: auto;
+}
+
+.tiptap th,
+.tiptap td {
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.65rem;
+  min-width: 3.5rem;
+  vertical-align: top;
+}
+
+.tiptap th {
+  background: var(--toolbar);
+  font-weight: 650;
+  text-align: left;
+}
+
+.tiptap .selectedCell {
+  background: color-mix(in oklab, var(--accent) 16%, transparent);
+}
+
+.tiptap .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.tiptap.resize-cursor {
+  cursor: col-resize;
+}
+
+.tiptap ul[data-type='taskList'] {
+  list-style: none;
+  padding-left: 0.15rem;
+}
+
+.tiptap ul[data-type='taskList'] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.tiptap ul[data-type='taskList'] li > label {
+  margin-top: 0.38em;
+}
+
+.tiptap ul[data-type='taskList'] li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.tiptap ul[data-type='taskList'] input[type='checkbox'] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+
+.search-match {
+  background: color-mix(in oklab, #eab308 48%, transparent);
+  border-radius: 2px;
+}
+
+.search-match-active {
+  background: color-mix(in oklab, #f59e0b 78%, transparent);
+  border-radius: 2px;
 }

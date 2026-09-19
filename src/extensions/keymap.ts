@@ -2,6 +2,7 @@ import { Extension } from '@tiptap/core'
 
 type NotepadKeymapOptions = {
   onLink: () => void
+  onPalette: () => void
 }
 
 /** Extra shortcuts on top of TipTap defaults (Ctrl+B / Ctrl+I / undo). */
@@ -11,6 +12,7 @@ export const NotepadKeymap = Extension.create<NotepadKeymapOptions>({
   addOptions() {
     return {
       onLink: () => {},
+      onPalette: () => {},
     }
   },
 
@@ -23,6 +25,14 @@ export const NotepadKeymap = Extension.create<NotepadKeymapOptions>({
       'Mod-Alt-2': () => this.editor.commands.toggleHeading({ level: 2 }),
       'Mod-Alt-3': () => this.editor.commands.toggleHeading({ level: 3 }),
       'Mod-k': () => {
+        this.options.onPalette()
+        return true
+      },
+      'Mod-p': () => {
+        this.options.onPalette()
+        return true
+      },
+      'Mod-Shift-k': () => {
         this.options.onLink()
         return true
       },
@@ -31,6 +41,7 @@ export const NotepadKeymap = Extension.create<NotepadKeymapOptions>({
       'Mod-Shift-b': () => this.editor.commands.toggleBlockquote(),
       'Mod-Shift-7': () => this.editor.commands.toggleOrderedList(),
       'Mod-Shift-8': () => this.editor.commands.toggleBulletList(),
+      'Mod-Shift-9': () => this.editor.commands.toggleTaskList(),
       'Mod-Shift-h': () => this.editor.commands.setHorizontalRule(),
     }
   },

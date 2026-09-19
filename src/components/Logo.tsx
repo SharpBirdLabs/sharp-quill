@@ -3,7 +3,6 @@ type LogoProps = {
   title?: string
 }
 
-/** SharpQuill mark: a SharpBird whose tail is a writing nib. */
 export function Logo({ className = 'h-10 w-10', title = 'SharpQuill' }: LogoProps) {
   return (
     <svg
@@ -14,15 +13,14 @@ export function Logo({ className = 'h-10 w-10', title = 'SharpQuill' }: LogoProp
       role="img"
       aria-label={title}
     >
-      <rect width="64" height="64" rx="14" fill="#F3EEE3" />
-      <rect x="3" y="3" width="58" height="58" rx="12" fill="#FFFDF8" />
+      <rect width="64" height="64" rx="14" fill="#F5F1E9" />
       <path
-        fill="#1E3A5F"
-        d="M18 40c0-11 10-22 23-23 5-.4 9 2 10 6 1.2 4.2-1.5 7.4-5.6 8.6-3 .8-5.2 3.6-4.4 8 1 5.4-3.2 10-10 10-8 0-13-4.2-13-9.6Z"
+        fill="#0B1F3A"
+        d="M14.8 33.2 32.6 9.4l4.6 10.2-6.8 3.8 10.6-9.6 3.4 8.6-8.2 4.6 12.4-7.4 4.8 7.2-9.2 5.4 8.2-1.6-4.6 6.8-7.4 3.2 10.8 9.6-12.2-3.4 5.6 10.4-8.8-7.2 2.8 10.4-6.6-8.4-3.2-8.8-8.6 3.8z"
       />
-      <path fill="#1E3A5F" d="M36 16.5 52 10l-6.2 16.5-8.3-2.2Z" />
-      <path fill="#D4A017" d="m44.5 28.5 9.5-2.8-6.2 8.4Z" />
-      <path fill="#D4A017" d="m28.5 44.5 12.8 12.2-15.4-5.4Z" />
+      <path fill="#F5F1E9" d="m45.6 27.2 4.4 1.4-2.8 2.8z" />
+      <path fill="#D4A017" d="m50.2 28.4 7.4 2.6-6.6 3z" />
+      <path fill="#D4A017" d="m36.2 47.6 14.6 10.8-11.8-7.6z" />
     </svg>
   )
 }

@@ -36,9 +36,13 @@ export function StatusBar({
         <span className="mx-2 text-line">·</span>
         <span className="font-medium text-ink">{stats.characters}</span>{' '}
         {stats.characters === 1 ? 'character' : 'characters'}
+        <span className="mx-2 hidden text-line sm:inline">·</span>
+        <span className="hidden sm:inline">
+          {stats.readingMinutes === 0 ? '0 min read' : `${stats.readingMinutes} min read`}
+        </span>
       </p>
       <div className="flex items-center gap-2">
-        <span className="hidden sm:inline">{saved ? 'Saved' : 'Saving…'}</span>
+        <span className="hidden sm:inline">{saved ? 'Saved' : 'Saving...'}</span>
         {focusMode && (
           <ToolbarButton label="Exit focus mode" shortcut="Esc" onClick={onToggleFocus}>
             <Minimize2 size={15} />

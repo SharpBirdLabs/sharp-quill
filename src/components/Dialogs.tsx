@@ -156,6 +156,115 @@ export function ConfirmDialog({
   )
 }
 
+type PromptDialogProps = {
+  title: string
+  label: string
+  initialValue: string
+  confirmLabel: string
+  onClose: () => void
+  onConfirm: (value: string) => void
+}
+
+export function PromptDialog({
+  title,
+  label,
+  initialValue,
+  confirmLabel,
+  onClose,
+  onConfirm,
+}: PromptDialogProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+    inputRef.current?.select()
+  }, [])
+
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    onConfirm(inputRef.current?.value.trim() ?? '')
+  }
+
+  return (
+    <Modal title={title} onClose={onClose}>
+      <form onSubmit={onSubmit} className="space-y-4">
+        <label className="block text-sm">
+          <span className="mb-1.5 block font-medium text-muted">{label}</span>
+          <input
+            ref={inputRef}
+            defaultValue={initialValue}
+            className="w-full rounded-xl border border-line bg-desk/40 px-3 py-2.5 text-ink outline-none ring-accent/0 transition focus:border-accent focus:ring-4 focus:ring-accent/15"
+          />
+        </label>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl px-3 py-2 text-sm font-medium text-muted hover:bg-black/5 hover:text-ink dark:hover:bg-white/10"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="rounded-xl bg-ink px-4 py-2 text-sm font-medium text-paper hover:opacity-90"
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  )
+}
+
+type ChoiceDialogProps = {
+  title: string
+  message: string
+  onClose: () => void
+  primaryLabel: string
+  secondaryLabel: string
+  onPrimary: () => void
+  onSecondary: () => void
+}
+
+export function ChoiceDialog({
+  title,
+  message,
+  onClose,
+  primaryLabel,
+  secondaryLabel,
+  onPrimary,
+  onSecondary,
+}: ChoiceDialogProps) {
+  return (
+    <Modal title={title} onClose={onClose}>
+      <p className="mb-5 text-sm leading-6 text-muted">{message}</p>
+      <div className="flex flex-wrap justify-end gap-2">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-xl px-3 py-2 text-sm font-medium text-muted hover:bg-black/5 hover:text-ink dark:hover:bg-white/10"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onSecondary}
+          className="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-line hover:bg-black/5 dark:hover:bg-white/10"
+        >
+          {secondaryLabel}
+        </button>
+        <button
+          type="button"
+          onClick={onPrimary}
+          className="rounded-xl bg-ink px-4 py-2 text-sm font-medium text-paper hover:opacity-90"
+        >
+          {primaryLabel}
+        </button>
+      </div>
+    </Modal>
+  )
+}
+
 export function Toast({ message }: { message: string }) {
   return (
     <div

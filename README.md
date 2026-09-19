@@ -76,4 +76,4 @@ React 19, Vite, Tailwind CSS v4, TipTap, Lucide icons, `marked`, and `turndown`.
 
 ---
 
-Made by [SharpBird Labs](https://github.com/SharpBirdLabs).
+Made by [SharpBird Labs](https://www.amirtahan.ir/sharpbird).
