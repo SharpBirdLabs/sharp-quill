@@ -2,7 +2,7 @@
   <img src="public/logo.png" alt="SharpQuill" width="120" height="120" />
 </p>
 
-<h1 align="center">[https://sharpquill.amirtahan.ir]SharpQuill</h1>
+<h1 align="center">SharpQuill(https://sharpquill.amirtahan.ir/)</h1>
 
 <p align="center">
   A SharpBird Labs notepad for Markdown.<br />
