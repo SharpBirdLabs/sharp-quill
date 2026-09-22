@@ -2,15 +2,12 @@
   <img src="public/logo.png" alt="SharpQuill" width="120" height="120" />
 </p>
 
-<h1 align="center">SharpQuill</h1>
+<h1 align="center">[https://sharpquill.amirtahan.ir]SharpQuill</h1>
 
 <p align="center">
   A SharpBird Labs notepad for Markdown.<br />
   Write in a true WYSIWYG view — then copy or export as Markdown whenever you need it.
 </p>
-
-## See it
-Sharpquil[https://sharpquill.amirtahan.ir/]
 
 ## Run it
 
